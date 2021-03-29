@@ -10,17 +10,18 @@ import { saveAs } from 'file-saver';
 })
 export class AppComponent {
 
-  private buffer: any = null;
-  private bufferNode: any = null;
-  public playing: boolean = false;
-  private gain: any = null;
-  private panning: any = null;
-  private ctx: any = null;
+  private ctx: any = null;          // The Audio Context Interface 
+  private buffer: any = null;       //  Array Buffer
+  private bufferNode: any = null;   //  Buffer Source Node
+  public playing: boolean = false;  //  Boolean parameter to deal with "Play" & "Stop" buttons
+  private gain: any = null;         //  Effect: Changing volume
+  private panning: any = null;      //  Effect: Changing panning (Left/ Right)
 
 
   constructor() {
   }
 
+  //Initiate the Audio Context. Once is enough.
   initiateAudioContext() {
     this.ctx = new AudioContext();
     this.gain = this.ctx.createGain();
@@ -28,6 +29,7 @@ export class AppComponent {
     console.log("Audio Context Initiated");
   }
 
+  //Get the array buffer from the input.
   choseFile(files: FileList) {
     let blob = files[0];
     let fr = new FileReader();
@@ -39,10 +41,11 @@ export class AppComponent {
     fr.readAsArrayBuffer(blob);
   }
 
+  //Play the audio file.
   play() {
     if (this.playing) return;
     this.playing = true;
-    this.ctx.state === 'suspended'? this.ctx.resume() : null;
+    //this.ctx.state === 'suspended'? this.ctx.resume() : null;
     let bufferSourceNode = this.ctx.createBufferSource();
     bufferSourceNode.buffer = this.buffer;
     bufferSourceNode.connect(this.gain).connect(this.panning).connect(this.ctx.destination);
@@ -50,6 +53,7 @@ export class AppComponent {
     this.bufferNode = bufferSourceNode;
   }
 
+  //Stop the audio file.
   stop() {
     if (!this.playing) return;
     this.playing = false;
@@ -57,6 +61,7 @@ export class AppComponent {
     bn.stop();
   }
 
+  //Add changes to the audio file.
   change() {
     let gain: GainNode = this.gain;
     let panning: StereoPannerNode = this.panning;
@@ -64,6 +69,7 @@ export class AppComponent {
     panning.pan.value = -1;
   }
 
+  //Save the audio with the changes with Offline Audio Context interface
   async save() {
     let offlineCtx = new OfflineAudioContext(this.bufferNode.buffer.numberOfChannels, this.bufferNode.buffer.length, this.bufferNode.buffer.sampleRate);
     let obs = offlineCtx.createBufferSource();
@@ -79,6 +85,8 @@ export class AppComponent {
       newBuff = r;
     });
 
+    //From here, the code is taken from the web.
+    //It is for converting the audio buffer to a wav file.
     const [left, right] = [newBuff.getChannelData(0), newBuff.getChannelData(1)]
 
     // interleaved
@@ -160,5 +168,4 @@ export class AppComponent {
 
     return new Uint8Array(buffer)
   }
-
 }
