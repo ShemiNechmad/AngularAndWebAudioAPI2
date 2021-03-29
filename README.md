@@ -1,3 +1,15 @@
+To play the track we'll use AudioContext
+To make changes, we'll use a gain node and a stereo panning node for this example.
+To save the changes we'll use OfflineAudioContext
+
+1. Create an angular project: ng new project-name
+2. install web audio api for angular: npm install angular-audio-context
+3. install file saver: npm install file-saver
+4. import the web audio api to the app module
+5. modify the html,css and ts files of the app component, with the code on the video.
+You can find the code in a github link, added to the video.
+
+
 # PlayAudio
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.3.
