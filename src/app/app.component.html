@@ -1,0 +1,8 @@
+<div class="body">
+  <button (click)="initiateAudioContext()">Start Audio Context</button>
+  <input type="file" accept="audio/*" (change)="choseFile($event.target.files)"/>
+  <button (click)="play()">Play</button>
+  <button (click)="stop()">Stop</button>
+  <button (click)="change()">Change</button>
+  <button (click)="save()">Save</button>
+</div>
